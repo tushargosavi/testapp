@@ -12,7 +12,7 @@ public class ByteDataGenerator
 
   protected ByteDataGenerator() { }
 
-  public ByteDataGenerator(int max, int min) {
+  public ByteDataGenerator(int min, int max) {
     maxSize = max;
     minSize = min;
     sizeDiff = max - min;
@@ -25,4 +25,23 @@ public class ByteDataGenerator
     return bytes;
   }
 
+  public int getMaxSize()
+  {
+    return maxSize;
+  }
+
+  public void setMaxSize(int maxSize)
+  {
+    this.maxSize = maxSize;
+  }
+
+  public int getMinSize()
+  {
+    return minSize;
+  }
+
+  public void setMinSize(int minSize)
+  {
+    this.minSize = minSize;
+  }
 }

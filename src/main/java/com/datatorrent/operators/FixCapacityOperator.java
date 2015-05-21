@@ -1,6 +1,5 @@
 package com.datatorrent.operators;
 
-import com.datatorrent.BaseBenchmarkOperator;
 import com.datatorrent.api.Context;
 import com.datatorrent.api.DefaultOutputPort;
 import com.datatorrent.utils.ByteDataGenerator;
@@ -8,9 +7,8 @@ import com.datatorrent.utils.RateLimitter;
 
 /* This operator has capacity to process x items per second
  */
-public class FixCapacityOperator extends BaseBenchmarkOperator
+public class FixCapacityOperator extends SinglePortInputOutputOperator
 {
-  public transient DefaultOutputPort<byte[]> out = new DefaultOutputPort<byte[]>();
 
   private int capacity;
   private transient RateLimitter rt;
@@ -19,13 +17,8 @@ public class FixCapacityOperator extends BaseBenchmarkOperator
   @Override public void processTuple(byte[] data)
   {
     if (rt.get()) {
-      emitTuple(gen.generateData());
+      super.processTuple(data);
     }
-  }
-
-  @Override protected void emitTuple(byte[] data)
-  {
-    out.emit(data);
   }
 
   public int getCapacity()
@@ -46,15 +39,7 @@ public class FixCapacityOperator extends BaseBenchmarkOperator
     super.setup(context);
   }
 
-  public ByteDataGenerator getGen()
-  {
-    return gen;
-  }
 
-  public void setGen(ByteDataGenerator gen)
-  {
-    this.gen = gen;
-  }
 
   @Override public void teardown()
   {

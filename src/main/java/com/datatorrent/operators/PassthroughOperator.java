@@ -1,9 +1,8 @@
 package com.datatorrent.operators;
 
-import com.datatorrent.BaseBenchmarkOperator;
 import com.datatorrent.api.DefaultOutputPort;
 
-public class PassthroughOperator extends BaseBenchmarkOperator
+public class PassthroughOperator extends SinglePortInputOutputOperator
 {
   public transient DefaultOutputPort<byte[]> out = new DefaultOutputPort<byte[]>();
 

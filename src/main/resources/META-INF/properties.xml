@@ -11,21 +11,45 @@
     <name>dt.attr.MASTER_MEMORY_MB</name>
     <value>1024</value>
   </property>
+
   <property>
-    <name>dt.application.MyFirstApplication.operator.seedGen.prop.seedstart</name>
-    <value>1</value>
+    <name>dt.operator.Input3.attr.MEMORY_MB</name>
+    <value>4000</value>
   </property>
+
   <property>
-    <name>dt.application.MyFirstApplication.operator.seedGen.prop.seedend</name>
-    <value>10</value>
+    <name>dt.operator.Converter.attr.MEMORY_MB</name>
+    <value>4000</value>
   </property>
+
   <property>
-    <name>dt.application.MyFirstApplication.operator.console.prop.stringFormat</name>
-    <value>hello world: %s</value>
+    <name>dt.operator.Counter.attr.MEMORY_MB</name>
+    <value>500</value>
   </property>
-<property>
-<name>dt.attr.CONTAINER_JVM_OPTIONS</name>
-  <value>-Xmx4g -server -Dlog4j.debug=true -Xloggc:&lt;LOG_DIR&gt;/gc.log -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/tmp/headpdump.local.bin  -verbose:gc -XX:+PrintGCDateStamps</value>
+
+  <property>
+    <name>dt.operator.Store.attr.MEMORY_MB</name>
+    <value>6000</value>
+  </property>
+
+  <property>
+    <name>dt.operator.DC1.attr.MEMORY_MB</name>
+    <value>5000</value>
+  </property>
+
+  <property>
+    <name>dt.operator.DC2.attr.MEMORY_MB</name>
+    <value>5000</value>
+  </property>
+
+  <property>
+    <name>dt.operator.DC3.attr.MEMORY_MB</name>
+    <value>5000</value>
+  </property>
+
+  <property>
+    <name>dt.attr.CONTAINER_JVM_OPTIONS</name>
+    <value>-Xmx4g -server -Dlog4j.debug=true -Xloggc:&lt;LOG_DIR&gt;/gc.log -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/tmp/headpdump.local.bin  -verbose:gc -XX:+PrintGCDateStamps</value>
   </property>
 
 </configuration>
