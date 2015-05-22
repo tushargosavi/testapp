@@ -7,13 +7,14 @@ import java.util.concurrent.atomic.AtomicLong;
 public class RateLimitter
 {
   private transient Timer timer;
-  private AtomicLong availables = new AtomicLong();
+  private transient AtomicLong availables;
   private long count;
   private volatile boolean stopped;
 
   public void start() {
     timer = new Timer();
     final Object obj = this;
+    availables = new AtomicLong();
     timer.scheduleAtFixedRate(new TimerTask() {
       @Override public void run()
       {
@@ -42,7 +43,6 @@ public class RateLimitter
   }
 
   public void stop() {
-    System.out.println("Stopping the timer");
     stopped = true;
     if (timer != null) {
       timer.cancel();
@@ -81,17 +81,14 @@ public class RateLimitter
         int count = 0;
         while(!limitter.isStopped()) {
           if (limitter.get()) {
-            System.out.println("Incrementing counter " + count);
             count++;
           }
         }
-        System.out.println("Total number of elements emitted " + count);
       }
     };
     t.start();
     Thread.sleep(10000);
     limitter.stop();
     t.join();
-    System.out.println("Thread finished");
   }
 }

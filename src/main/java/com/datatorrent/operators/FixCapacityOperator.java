@@ -29,6 +29,8 @@ public class FixCapacityOperator extends SinglePortInputOutputOperator
   public void setCapacity(int capacity)
   {
     this.capacity = capacity;
+    if (rt != null)
+      rt.setCount(capacity);
   }
 
   @Override public void setup(Context.OperatorContext context)
@@ -38,8 +40,6 @@ public class FixCapacityOperator extends SinglePortInputOutputOperator
     rt.start();
     super.setup(context);
   }
-
-
 
   @Override public void teardown()
   {

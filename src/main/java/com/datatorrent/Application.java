@@ -10,10 +10,7 @@ import com.datatorrent.api.StreamingApplication;
 import com.datatorrent.api.annotation.ApplicationAnnotation;
 import com.datatorrent.lib.partitioner.StatelessPartitioner;
 import com.datatorrent.lib.stream.DevNullCounter;
-import com.datatorrent.operators.DataGenerator;
-import com.datatorrent.operators.FixCapacityOperator;
-import com.datatorrent.operators.SinglePortInputOutputOperator;
-import com.datatorrent.operators.StreamJoin3;
+import com.datatorrent.operators.*;
 import com.datatorrent.utils.ByteDataGenerator;
 import org.apache.hadoop.conf.Configuration;
 
@@ -25,7 +22,7 @@ public class Application implements StreamingApplication
   public void populateDAG(DAG dag, Configuration conf)
   {
     /* First pipe line */
-    DataGenerator gen1 = dag.addOperator("Input1", new DataGenerator());
+    BlockableDataGenerator gen1 = dag.addOperator("Input1", new BlockableDataGenerator());
     gen1.setGen(new ByteDataGenerator(5102, 14336));
     gen1.setRatePerSecond(1000);
     dag.setAttribute(gen1, Context.OperatorContext.PARTITIONER, new StatelessPartitioner<Operator>(8));
@@ -82,7 +79,7 @@ public class Application implements StreamingApplication
     dag.addStream("s5", dc1.out, last.in1);
     dag.addStream("s6", dc2.out, last.in2);
     dag.addStream("s7", dc3.out, last.in3);
-    dag.addStream("counterdata", last.out, counter.data).setLocality(DAG.Locality.THREAD_LOCAL);
+    dag.addStream("s8", last.out, counter.data).setLocality(DAG.Locality.THREAD_LOCAL);
 
   }
 }
