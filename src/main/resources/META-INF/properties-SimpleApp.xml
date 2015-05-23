@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+
+<configuration>
+  <!-- 
+  <property>
+    <name>dt.application.{appName}.operator.{opName}.prop.{propName}</name>
+    <value>some-default-value (if value is not specified, it is required from the user or custom config when launching)</value>
+  </property>
+  -->
+  <property>
+    <name>dt.attr.MASTER_MEMORY_MB</name>
+    <value>1024</value>
+  </property>
+
+  <property>
+    <name>dt.operator.Input3.attr.MEMORY_MB</name>
+    <value>4000</value>
+  </property>
+
+  <property>
+    <name>dt.operator.Converter.attr.MEMORY_MB</name>
+    <value>4000</value>
+  </property>
+
+  <property>
+    <name>dt.operator.Counter.attr.MEMORY_MB</name>
+    <value>500</value>
+  </property>
+
+  <property>
+    <name>dt.operator.Store.attr.MEMORY_MB</name>
+    <value>6000</value>
+  </property>
+
+  <property>
+    <name>dt.operator.DC1.attr.MEMORY_MB</name>
+    <value>5000</value>
+  </property>
+
+  <property>
+    <name>dt.operator.DC2.attr.MEMORY_MB</name>
+    <value>5000</value>
+  </property>
+
+  <property>
+    <name>dt.operator.DC3.attr.MEMORY_MB</name>
+    <value>5000</value>
+  </property>
+
+  <property>
+    <name>dt.attr.CONTAINER_JVM_OPTIONS</name>
+    <value>-Xmx4g -server -Dlog4j.debug=true -Xloggc:&lt;LOG_DIR&gt;/gc.log -verbose:gc -XX:+PrintGCDateStamps</value>
+  </property>
+
+</configuration>
+
