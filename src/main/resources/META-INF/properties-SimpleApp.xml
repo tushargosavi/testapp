@@ -13,38 +13,13 @@
   </property>
 
   <property>
-    <name>dt.operator.Input3.attr.MEMORY_MB</name>
-    <value>4000</value>
+    <name>dt.operator.Gen.attr.MEMORY_MB</name>
+    <value>2000</value>
   </property>
 
   <property>
-    <name>dt.operator.Converter.attr.MEMORY_MB</name>
-    <value>4000</value>
-  </property>
-
-  <property>
-    <name>dt.operator.Counter.attr.MEMORY_MB</name>
-    <value>500</value>
-  </property>
-
-  <property>
-    <name>dt.operator.Store.attr.MEMORY_MB</name>
-    <value>6000</value>
-  </property>
-
-  <property>
-    <name>dt.operator.DC1.attr.MEMORY_MB</name>
-    <value>5000</value>
-  </property>
-
-  <property>
-    <name>dt.operator.DC2.attr.MEMORY_MB</name>
-    <value>5000</value>
-  </property>
-
-  <property>
-    <name>dt.operator.DC3.attr.MEMORY_MB</name>
-    <value>5000</value>
+    <name>dt.operator.Console.attr.MEMORY_MB</name>
+    <value>2000</value>
   </property>
 
   <property>

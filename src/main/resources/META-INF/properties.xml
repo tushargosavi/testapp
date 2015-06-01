@@ -49,7 +49,7 @@
 
   <property>
     <name>dt.attr.CONTAINER_JVM_OPTIONS</name>
-    <value>-Xmx4g -server -Dlog4j.debug=true -Xloggc:&lt;LOG_DIR&gt;/gc.log -verbose:gc -XX:+PrintGCDateStamps</value>
+    <value>-Xmx4g -server -Dlog4j.debug=true -DNETLET.MAX_SENDBUFFER_SIZE=1024 -Xloggc:&lt;LOG_DIR&gt;/gc.log -verbose:gc -XX:+PrintGCDateStamps</value>
   </property>
 
 </configuration>
