@@ -1,18 +1,21 @@
 package com.datatorrent.store;
 
+import com.datatorrent.common.util.Slice;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.file.tfile.TFile;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.util.List;
 
-public interface Scanner {
+public interface Scanner  extends Closeable {
+  void rewind() throws IOException;
   void advance() throws IOException;
   boolean atEnd();
-  TFile.Reader.Scanner.Entry get() throws IOException;
+  MutableKeyValPair get() throws IOException;
 }
 
 class TFileScanner implements Scanner
@@ -38,9 +41,41 @@ class TFileScanner implements Scanner
     return scanner.atEnd();
   }
 
-  @Override public TFile.Reader.Scanner.Entry get() throws IOException
+  @Override public MutableKeyValPair get() throws IOException
   {
-    return scanner.entry();
+    TFile.Reader.Scanner.Entry e = scanner.entry();
+    return new MutableKeyValPair(getKeySlice(e), getValSlice(e));
+  }
+
+  @Override public void rewind() throws IOException
+  {
+    scanner.rewind();
+  }
+
+  @Override public void close() throws IOException
+  {
+    scanner.close();
+    reader.close();
+    di.close();
+  }
+
+  // TODO share buffer.
+  private Slice getValSlice(TFile.Reader.Scanner.Entry e) throws IOException
+  {
+    int valLen = e.getValueLength();
+    byte[] val = new byte[valLen];
+    e.getValue(val);
+    return new Slice(val);
+  }
+
+
+  // TODO share buffer
+  private Slice getKeySlice(TFile.Reader.Scanner.Entry e) throws IOException
+  {
+    int keyLen = e.getKeyLength();
+    byte[] key = new byte[keyLen];
+    e.getKey(key);
+    return new Slice(key);
   }
 }
 
@@ -75,8 +110,18 @@ class CombinedScanner implements Scanner {
     return false;
   }
 
-  @Override public TFile.Reader.Scanner.Entry get() throws IOException
+  @Override public MutableKeyValPair get() throws IOException
   {
     return null;
+  }
+
+  @Override public void rewind() throws IOException
+  {
+
+  }
+
+  @Override public void close() throws IOException
+  {
+
   }
 }

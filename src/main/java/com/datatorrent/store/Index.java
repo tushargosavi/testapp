@@ -7,10 +7,7 @@ import com.esotericsoftware.kryo.io.Output;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Index
 {
@@ -78,6 +75,23 @@ class LevelIndex {
   public FileInfo get(int i) {
     return files.get(i);
   }
+
+  public List<FileInfo> getFilesInRange(Comparator cmp, KeyRange range)
+  {
+    return getFilesInRange(cmp, range.start, range.end);
+  }
+
+  public List<FileInfo> getFilesInRange(Comparator cmp, Slice start, Slice end)
+  {
+    List<FileInfo> includeFiles = new ArrayList<FileInfo>();
+    for(FileInfo file : files) {
+      if (cmp.compare(file.lastKey, start) >= 0 &&
+          (cmp.compare(file.startKey, end) <= 0)) {
+        includeFiles.add(file);
+      }
+    }
+    return includeFiles;
+  }
 }
 
 class FileInfo {
@@ -127,5 +141,16 @@ class FileInfo {
     byte[] bytes1 = new byte[len];
     in.readBytes(bytes1);
     lastKey = new Slice(bytes1);
+  }
+
+  @Override public String toString()
+  {
+    return "FileInfo{" +
+        "path='" + path + '\'' +
+        ", size=" + size +
+        ", totalKeys=" + totalKeys +
+        ", startKey=" + startKey +
+        ", lastKey=" + lastKey +
+        '}';
   }
 }

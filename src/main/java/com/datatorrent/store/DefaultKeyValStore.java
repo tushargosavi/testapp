@@ -79,7 +79,6 @@ public class DefaultKeyValStore implements KeyValStore
     executorService.awaitTermination(1, TimeUnit.DAYS);
     if (fs != null)
       fs.close();
-
   }
 
   @Override public void put(Slice key, Slice value)
@@ -96,16 +95,16 @@ public class DefaultKeyValStore implements KeyValStore
 
   void commit() throws IOException
   {
-    FileInfo finfo = flushData(getNextFile(0));
-    level0_add(finfo);
+    VersionEdit finfo = flushData(getNextFile(0));
+
   }
 
-  private FileInfo flushData(String fileName) throws IOException
+  private VersionEdit flushData(String fileName) throws IOException
   {
     return flushData(fileName, memBuf);
   }
 
-  private FileInfo flushData(String fileName, Map<Slice, Slice> memBuf) throws IOException
+  private VersionEdit flushData(String fileName, Map<Slice, Slice> memBuf) throws IOException
   {
     System.out.println("flusing data to file " + fileName);
     FSDataOutputStream fout = fs.create(new Path(fileName));
@@ -125,7 +124,9 @@ public class DefaultKeyValStore implements KeyValStore
     fout.close();
 
     FileInfo finfo = new FileInfo(fileName, size, count, startKey, endKey);
-    return finfo;
+    VersionEdit edit = new VersionEdit();
+    edit.addFile(9, finfo);
+    return edit;
   }
 
   public void level0_add(FileInfo finfo) {
@@ -177,39 +178,8 @@ public class DefaultKeyValStore implements KeyValStore
       System.out.println(f.path);
     }
 
-    compactFiles(0, lst1, list);
+    //compactFiles(0, lst1, list);
     level_o_compaction_active = false;
-  }
-
-  /* crud compaction, read all files in memory and then keep writing,
-   * return list of new files written */
-  /* lst1 one contains file from level n
-     lst2 contains files from level n+1 which overlaps with the given range.
-   */
-  private FileInfo compactFiles(int level, List<FileInfo> lst1, List<FileInfo> lst2) throws IOException
-  {
-    Map<Slice, Slice> data = new TreeMap<Slice, Slice>(comparator);
-
-    List<FileInfo> allFiles = new ArrayList<FileInfo>(lst1);
-    allFiles.addAll(lst2);
-    for(FileInfo file : allFiles) {
-      TFile.Reader.Scanner s = createScanner(file);
-      readAll(createScanner(file), data);
-      s.close();
-    }
-
-    System.out.println("flusing combined data for level " + level);
-    return flushData(getNextFile(level+1), data);
-  }
-
-  void readAll(TFile.Reader.Scanner scanner, Map<Slice, Slice> in) throws IOException
-  {
-    scanner.rewind();
-    while(scanner.advance()) {
-      TFile.Reader.Scanner.Entry e1 = scanner.entry();
-      in.put(getKeySlice(e1), getValSlice(e1));
-    }
-    scanner.close();
   }
 
   private int compareEntries(TFile.Reader.Scanner.Entry e1, TFile.Reader.Scanner.Entry e2) throws IOException
@@ -226,14 +196,7 @@ public class DefaultKeyValStore implements KeyValStore
     return val;
   }
 
-  // TODO share buffer.
-  private Slice getValSlice(TFile.Reader.Scanner.Entry e) throws IOException
-  {
-    int valLen = e.getValueLength();
-    byte[] val = new byte[valLen];
-    e.getKey(val);
-    return new Slice(val);
-  }
+
 
   private byte[] getKey(TFile.Reader.Scanner.Entry e) throws IOException
   {
@@ -243,14 +206,6 @@ public class DefaultKeyValStore implements KeyValStore
     return key;
   }
 
-  // TODO share buffer
-  private Slice getKeySlice(TFile.Reader.Scanner.Entry e) throws IOException
-  {
-    int keyLen = e.getKeyLength();
-    byte[] key = new byte[keyLen];
-    e.getKey(key);
-    return new Slice(key);
-  }
 
   /* Returns list of file which conatains key ranges between start and end
    * from level lvl */
