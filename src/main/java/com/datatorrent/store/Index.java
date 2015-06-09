@@ -35,11 +35,25 @@ public class Index
       lidx.load(dis);
     }
   }
+
+  public void apply(VersionEdit finfo)
+  {
+    for(VersionEdit.AddFile af : finfo.getNewFiles())
+    {
+      levels[af.level].addFile(af.info);
+    }
+
+    for(VersionEdit.DelFile df : finfo.getDelFiles())
+    {
+      levels[df.level].removeFile(df);
+    }
+  }
 }
 
 class LevelIndex {
   List<FileInfo> files = new ArrayList<FileInfo>();
   Map<String, FileInfo> idx = new HashMap<String, FileInfo>();
+  int nextFileId;
 
   FileInfo get(String file) {
     return idx.get(file);
@@ -52,6 +66,7 @@ class LevelIndex {
 
   public void save(DataOutputStream bos) throws IOException
   {
+    bos.writeInt(nextFileId);
     bos.writeInt(files.size());
     for(FileInfo finfo : files) {
       finfo.save(bos);
@@ -60,6 +75,7 @@ class LevelIndex {
 
   public void load(DataInputStream dis) throws IOException
   {
+    nextFileId = dis.readInt();
     int totalFiles = dis.readInt();
     for(int i = 0; i < totalFiles; i++) {
       FileInfo finfo = new FileInfo();
@@ -91,6 +107,15 @@ class LevelIndex {
       }
     }
     return includeFiles;
+  }
+
+  public int getNextFileId() {
+    return nextFileId++;
+  }
+
+  public void removeFile(VersionEdit.DelFile df)
+  {
+    files.remove(df);
   }
 }
 

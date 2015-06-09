@@ -35,6 +35,16 @@ public class VersionEdit
     this.delFiles.addAll(delta.delFiles);
   }
 
+  public List<AddFile> getNewFiles()
+  {
+    return newFiles;
+  }
+
+  public List<DelFile> getDelFiles()
+  {
+    return delFiles;
+  }
+
   public static class AddFile {
     final int level;
     final FileInfo info;

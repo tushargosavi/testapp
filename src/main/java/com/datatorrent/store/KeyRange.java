@@ -22,7 +22,7 @@ public class KeyRange
         '}';
   }
 
-  public KeyRange merge(Comparator<Slice> cmp, KeyRange other) {
+  public KeyRange merge(Comparator<? super Slice> cmp, KeyRange other) {
     // this object is not initialize
     if (start == null) return other;
     // other object is null
