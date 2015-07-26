@@ -1,8 +1,8 @@
 package com.datatorrent.operators;
 
-import com.datatorrent.api.BaseOperator;
 import com.datatorrent.api.DefaultInputPort;
 import com.datatorrent.api.DefaultOutputPort;
+import com.datatorrent.common.util.BaseOperator;
 import com.datatorrent.utils.ByteDataGenerator;
 
 public class SinglePortInputOutputOperator extends BaseOperator

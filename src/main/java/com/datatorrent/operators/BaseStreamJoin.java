@@ -1,7 +1,7 @@
 package com.datatorrent.operators;
 
-import com.datatorrent.api.BaseOperator;
 import com.datatorrent.api.DefaultOutputPort;
+import com.datatorrent.common.util.BaseOperator;
 
 public class BaseStreamJoin<T> extends BaseOperator
 {

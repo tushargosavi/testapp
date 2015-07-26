@@ -8,7 +8,7 @@ import com.datatorrent.api.DAG;
 import com.datatorrent.api.Operator;
 import com.datatorrent.api.StreamingApplication;
 import com.datatorrent.api.annotation.ApplicationAnnotation;
-import com.datatorrent.lib.partitioner.StatelessPartitioner;
+import com.datatorrent.common.partitioner.StatelessPartitioner;
 import com.datatorrent.lib.stream.DevNullCounter;
 import com.datatorrent.operators.*;
 import com.datatorrent.utils.ByteDataGenerator;

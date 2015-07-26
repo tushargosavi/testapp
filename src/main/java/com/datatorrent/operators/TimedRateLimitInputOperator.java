@@ -1,10 +1,9 @@
 package com.datatorrent.operators;
 
-import com.datatorrent.api.BaseOperator;
 import com.datatorrent.api.Context;
 import com.datatorrent.api.InputOperator;
+import com.datatorrent.common.util.BaseOperator;
 
-import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicInteger;
