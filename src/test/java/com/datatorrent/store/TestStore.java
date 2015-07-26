@@ -41,7 +41,9 @@ public class TestStore
       for (int i = 0; i < 1000; i++) {
         store.put(genKey(), genVal());
       }
+      System.out.println("comminting data");
       store.commit();
+      System.out.println("commit done");
     }
     store.close();
   }

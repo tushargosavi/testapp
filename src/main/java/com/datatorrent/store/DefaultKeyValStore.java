@@ -28,8 +28,7 @@ public class DefaultKeyValStore implements KeyValStore
 
   DefaultKeyValStore() throws IOException
   {
-    env = new Environment(basePath);
-    memBuf = new TreeMap<Slice, Slice>(env.getComparator());
+
   }
 
   public int getMaxSize()
@@ -61,12 +60,14 @@ public class DefaultKeyValStore implements KeyValStore
   void setup() throws IOException
   {
     executorService = Executors.newScheduledThreadPool(10);
+    env = new Environment(basePath);
+    memBuf = new TreeMap<Slice, Slice>(env.getComparator());
     writer = new Writer(env.getFileSystem());
   }
 
   void close() throws IOException, InterruptedException
   {
-    executorService.awaitTermination(1, TimeUnit.DAYS);
+    executorService.awaitTermination(5, TimeUnit.SECONDS);
     env.close();
   }
 

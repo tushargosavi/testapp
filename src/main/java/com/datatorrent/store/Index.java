@@ -21,7 +21,7 @@ public class Index
 
   public LevelIndex get(int i) { return levels[i]; }
 
-  void save(DataOutputStream bos) throws IOException
+  public void save(DataOutputStream bos) throws IOException
   {
     for(LevelIndex lidx : levels) {
       lidx.save(bos);
@@ -29,7 +29,7 @@ public class Index
     bos.flush();
   }
 
-  void load(DataInputStream dis) throws IOException
+  public void load(DataInputStream dis) throws IOException
   {
     for(LevelIndex lidx : levels) {
       lidx.load(dis);
@@ -47,6 +47,11 @@ public class Index
     {
       levels[df.level].removeFile(df);
     }
+  }
+
+  public void print()
+  {
+
   }
 }
 
