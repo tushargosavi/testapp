@@ -1,6 +1,16 @@
 package com.datatorrent.operators;
 
 /* Input operator which generate burst of data */
+
+/**
+ * Data generator operator.
+ *
+ * Generate burst of data.
+ *
+ * @displayName Random byte array data generator.
+ * @category benchmark
+ * @tags input
+ */
 public class BrustInputOperator extends DataGenerator
 {
   /* generate burst for n windows, followed by m idle windows */

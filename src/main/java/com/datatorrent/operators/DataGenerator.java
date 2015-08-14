@@ -3,6 +3,13 @@ package com.datatorrent.operators;
 import com.datatorrent.api.DefaultOutputPort;
 import com.datatorrent.utils.ByteDataGenerator;
 
+/**
+ * Data generator operator.
+ *
+ * @displayName Random byte array data generator.
+ * @category benchmark
+ * @tags input
+ */
 public class DataGenerator extends TimedRateLimitInputOperator<byte[]>
 {
   /**

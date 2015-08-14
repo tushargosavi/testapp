@@ -5,6 +5,17 @@ import com.datatorrent.api.DefaultOutputPort;
 import com.datatorrent.common.util.BaseOperator;
 import com.datatorrent.utils.ByteDataGenerator;
 
+/**
+ * Single port input to output operator.
+ *
+ * This operator emits number of tuples proportional to number
+ * of input tuples.
+ *
+ *
+ * @displayName Single port input / output operator.
+ * @category benchmark
+ * @tags operator filter scale
+ */
 public class SinglePortInputOutputOperator extends BaseOperator
 {
   private int outputScaleFactor = 1;

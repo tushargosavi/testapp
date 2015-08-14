@@ -11,6 +11,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Join three stream together.
+ *
+ * @displayName Stream join 3.
+ * @category benchmark
+ * @tags join
+ */
 public class StreamJoin3<T> extends BaseStreamJoin<T> implements Partitioner<StreamJoin3>
 {
   @InputPortFieldAnnotation(optional = true)

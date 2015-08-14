@@ -5,7 +5,11 @@ import com.datatorrent.api.DefaultOutputPort;
 import com.datatorrent.utils.ByteDataGenerator;
 import com.datatorrent.utils.RateLimitter;
 
-/* This operator has capacity to process x items per second
+/**
+ *  This operator has capacity to process x items per second
+ * @displayName Fixed capacity operator
+ * @category benchmark
+ * @tags operator
  */
 public class FixCapacityOperator extends SinglePortInputOutputOperator
 {
