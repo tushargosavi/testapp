@@ -1,18 +1,39 @@
 package com.datatorrent.operators;
 
-import java.io.File;
+import java.util.Random;
+
+import com.datatorrent.api.Context;
 
 public class BlockableDataGenerator extends DataGenerator
 {
+
+  private int slowness = 0;
+  private Random rand;
   @Override public void emitTuples()
   {
     try {
-      File f = new File("/tmp/block");
-      if (f.exists())
-        Thread.sleep(120000);
+      if (slowness > 0)
+        Thread.sleep(rand.nextInt(slowness) * 100);
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
     super.emitTuples();
+  }
+
+  @Override
+  public void setup(Context.OperatorContext context)
+  {
+    super.setup(context);
+    rand = new Random();
+  }
+
+  public int getSlowness()
+  {
+    return slowness;
+  }
+
+  public void setSlowness(int slowness)
+  {
+    this.slowness = slowness;
   }
 }
