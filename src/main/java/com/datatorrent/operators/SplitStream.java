@@ -1,6 +1,7 @@
 package com.datatorrent.operators;
 
 import com.datatorrent.api.DefaultOutputPort;
+import com.datatorrent.api.annotation.OutputPortFieldAnnotation;
 
 /**
  * This operator do nothing with input tuple, it just passes the input tuple to
@@ -13,8 +14,9 @@ import com.datatorrent.api.DefaultOutputPort;
  * @category benchmark
  * @tags operator
  */
-public class PassthroughOperator extends SinglePortInputOutputOperator
+public class SplitStream extends SinglePortInputOutputOperator
 {
+  @OutputPortFieldAnnotation(optional = true)
   public transient DefaultOutputPort<byte[]> out = new DefaultOutputPort<byte[]>();
 
   @Override public void processTuple(byte[] data)

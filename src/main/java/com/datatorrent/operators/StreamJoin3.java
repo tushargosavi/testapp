@@ -47,6 +47,9 @@ public class StreamJoin3<T> extends BaseStreamJoin<T> implements Partitioner<Str
     }
   };
   private int partitionCount = 1;
+  private boolean split1 = true;
+  private boolean split2 = true;
+  private boolean split3 = true;
 
   private int getNewPartitionCount(
       Collection<com.datatorrent.api.Partitioner.Partition<StreamJoin3>> partitions,
@@ -66,9 +69,10 @@ public class StreamJoin3<T> extends BaseStreamJoin<T> implements Partitioner<Str
       Partitioner.Partition<StreamJoin3> po = new DefaultPartition<StreamJoin3>(dso);
       newPartitions.add(po);
     }
-    DefaultPartition.assignPartitionKeys(newPartitions, in1);
-    DefaultPartition.assignPartitionKeys(newPartitions, in2);
-    DefaultPartition.assignPartitionKeys(newPartitions, in3);
+
+    if (split1) DefaultPartition.assignPartitionKeys(newPartitions, in1);
+    if (split2) DefaultPartition.assignPartitionKeys(newPartitions, in2);
+    if (split3) DefaultPartition.assignPartitionKeys(newPartitions, in3);
 
     return newPartitions;
   }
@@ -86,5 +90,35 @@ public class StreamJoin3<T> extends BaseStreamJoin<T> implements Partitioner<Str
   public void setPartitionCount(int partitionCount)
   {
     this.partitionCount = partitionCount;
+  }
+
+  public boolean isSplit1()
+  {
+    return split1;
+  }
+
+  public void setSplit1(boolean split1)
+  {
+    this.split1 = split1;
+  }
+
+  public boolean isSplit2()
+  {
+    return split2;
+  }
+
+  public void setSplit2(boolean split2)
+  {
+    this.split2 = split2;
+  }
+
+  public boolean isSplit3()
+  {
+    return split3;
+  }
+
+  public void setSplit3(boolean split3)
+  {
+    this.split3 = split3;
   }
 }

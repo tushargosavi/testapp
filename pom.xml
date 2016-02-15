@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.apache.apex</groupId>
     <artifactId>malhar-demos</artifactId>
-    <version>3.4.0-incubating-SNAPSHOT</version>
+    <version>3.3.0-incubating-SNAPSHOT</version>
   </parent>
 
   <groupId>com.datatorrent</groupId>
@@ -21,6 +21,18 @@
   </properties>
 
   <dependencies>
+    <dependency>
+      <groupId>org.apache.apex</groupId>
+      <artifactId>malhar-library</artifactId>
+      <version>3.3.0-incubating-SNAPSHOT</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.apex</groupId>
+      <artifactId>malhar-contrib</artifactId>
+      <version>3.3.0-incubating-SNAPSHOT</version>
+      <scope>provided</scope>
+    </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>

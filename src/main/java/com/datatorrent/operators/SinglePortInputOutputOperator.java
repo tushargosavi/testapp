@@ -2,6 +2,8 @@ package com.datatorrent.operators;
 
 import com.datatorrent.api.DefaultInputPort;
 import com.datatorrent.api.DefaultOutputPort;
+import com.datatorrent.api.annotation.InputPortFieldAnnotation;
+import com.datatorrent.api.annotation.OutputPortFieldAnnotation;
 import com.datatorrent.common.util.BaseOperator;
 import com.datatorrent.utils.ByteDataGenerator;
 
@@ -21,8 +23,10 @@ public class SinglePortInputOutputOperator extends BaseOperator
   private int outputScaleFactor = 1;
   private ByteDataGenerator gen = new ByteDataGenerator(1024, 1024);
 
+  @OutputPortFieldAnnotation(optional = true)
   public transient DefaultOutputPort<byte[]> out = new DefaultOutputPort<byte[]>();
 
+  @InputPortFieldAnnotation(optional = true)
   public transient DefaultInputPort<byte[]> input = new DefaultInputPort<byte[]>()
   {
     @Override public void process(byte[] tuple)

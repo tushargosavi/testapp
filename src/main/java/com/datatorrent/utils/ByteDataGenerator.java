@@ -10,7 +10,7 @@ public class ByteDataGenerator
 
   private Random random = new Random();
 
-  protected ByteDataGenerator() { }
+  public ByteDataGenerator() { }
 
   public ByteDataGenerator(int min, int max) {
     maxSize = max;
