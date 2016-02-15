@@ -29,7 +29,7 @@ public class Application implements StreamingApplication
 
     SinglePortInputOutputOperator dc1 = dag.addOperator("DC1", new SinglePortInputOutputOperator());
     dc1.setGen(new ByteDataGenerator(160, 160));
-    dc1.setOutputScaleFactor(10);
+    dc1.setOutScaleFactor(10);
     dag.setInputPortAttribute(dc1.input, Context.PortContext.PARTITION_PARALLEL, true);
 
     dag.addStream("s1", gen1.output, dc1.input);
@@ -42,7 +42,7 @@ public class Application implements StreamingApplication
 
     SinglePortInputOutputOperator dc2 = dag.addOperator("DC2", new SinglePortInputOutputOperator());
     dc2.setGen(new ByteDataGenerator(160, 160));
-    dc2.setOutputScaleFactor(10);
+    dc2.setOutScaleFactor(10);
     dag.setInputPortAttribute(dc2.input, Context.PortContext.PARTITION_PARALLEL, true);
 
     dag.addStream("s2", gen2.output, dc2.input);
@@ -56,14 +56,14 @@ public class Application implements StreamingApplication
     FixCapacityOperator oper = dag.addOperator("Converter", new FixCapacityOperator());
     oper.setGen(new ByteDataGenerator(3000, 8000));
     oper.setCapacity(2000);
-    oper.setOutputScaleFactor(-4);
+    oper.setOutScaleFactor(-4);
     dag.setInputPortAttribute(oper.input, Context.PortContext.PARTITION_PARALLEL, true);
 
     dag.addStream("s3", gen3.output, oper.input);
 
     SinglePortInputOutputOperator dc3 = dag.addOperator("DC3", new SinglePortInputOutputOperator());
     dc3.setGen(new ByteDataGenerator(160, 160));
-    dc3.setOutputScaleFactor(10);
+    dc3.setOutScaleFactor(10);
     dag.setInputPortAttribute(dc3.input, Context.PortContext.PARTITION_PARALLEL, true);
     dag.addStream("s4", oper.out, dc3.input);
 

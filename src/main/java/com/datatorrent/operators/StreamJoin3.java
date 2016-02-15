@@ -18,30 +18,30 @@ import java.util.concurrent.TimeUnit;
  * @category benchmark
  * @tags join
  */
-public class StreamJoin3<T> extends BaseStreamJoin<T> implements Partitioner<StreamJoin3>
+public class StreamJoin3 extends BaseStreamJoin implements Partitioner<StreamJoin3>
 {
   @InputPortFieldAnnotation(optional = true)
-  public transient DefaultInputPort<T> in1 = new DefaultInputPort<T>()
+  public transient DefaultInputPort<byte[]> in1 = new DefaultInputPort<byte[]>()
   {
-    @Override public void process(T tuple)
+    @Override public void process(byte[] tuple)
     {
       processTuple(tuple);
     }
   };
 
   @InputPortFieldAnnotation(optional = true)
-  public transient DefaultInputPort<T> in2 = new DefaultInputPort<T>()
+  public transient DefaultInputPort<byte[]> in2 = new DefaultInputPort<byte[]>()
   {
-    @Override public void process(T tuple)
+    @Override public void process(byte[] tuple)
     {
       processTuple(tuple);
     }
   };
 
   @InputPortFieldAnnotation(optional = true)
-  public transient DefaultInputPort<T> in3 = new DefaultInputPort<T>()
+  public transient DefaultInputPort<byte[]> in3 = new DefaultInputPort<byte[]>()
   {
-    @Override public void process(T tuple)
+    @Override public void process(byte[] tuple)
     {
       processTuple(tuple);
     }

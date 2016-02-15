@@ -1,11 +1,13 @@
 package com.datatorrent.operators;
 
+import com.datatorrent.api.Context;
 import com.datatorrent.api.DefaultInputPort;
 import com.datatorrent.api.DefaultOutputPort;
 import com.datatorrent.api.annotation.InputPortFieldAnnotation;
 import com.datatorrent.api.annotation.OutputPortFieldAnnotation;
 import com.datatorrent.common.util.BaseOperator;
 import com.datatorrent.utils.ByteDataGenerator;
+import com.datatorrent.utils.OutputController;
 
 /**
  * Single port input to output operator.
@@ -20,8 +22,8 @@ import com.datatorrent.utils.ByteDataGenerator;
  */
 public class SinglePortInputOutputOperator extends BaseOperator
 {
-  private int outputScaleFactor = 1;
-  private ByteDataGenerator gen = new ByteDataGenerator(1024, 1024);
+  private int outScaleFactor = 1;
+  protected ByteDataGenerator gen = new ByteDataGenerator(1024, 1024);
 
   @OutputPortFieldAnnotation(optional = true)
   public transient DefaultOutputPort<byte[]> out = new DefaultOutputPort<byte[]>();
@@ -35,32 +37,24 @@ public class SinglePortInputOutputOperator extends BaseOperator
     }
   };
   private int count;
+  private transient OutputController outController = null;
 
   public void processTuple(byte[] data) {
-    if (outputScaleFactor >= 1) {
-      for (int i = 0; i < outputScaleFactor; i++) {
-        emitTuple(gen.generateData());
-      }
-    } else if (outputScaleFactor < 0) {
-      count++;
-      if (count % Math.abs(outputScaleFactor) == 0) {
-        emitTuple(gen.generateData());
-      }
-    }
+    outController.process();
   }
 
   protected void emitTuple(byte[] data) {
     out.emit(data);
   }
 
-  public int getOutputScaleFactor()
+  public int getOutScaleFactor()
   {
-    return outputScaleFactor;
+    return outScaleFactor;
   }
 
-  public void setOutputScaleFactor(int factor)
+  public void setOutScaleFactor(int factor)
   {
-    this.outputScaleFactor = factor;
+    this.outScaleFactor = factor;
   }
 
   public ByteDataGenerator getGen()
@@ -73,4 +67,10 @@ public class SinglePortInputOutputOperator extends BaseOperator
     this.gen = gen;
   }
 
+  @Override
+  public void setup(Context.OperatorContext context)
+  {
+    super.setup(context);
+    outController = new OutputController(out, gen, outScaleFactor);
+  }
 }

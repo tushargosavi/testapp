@@ -17,21 +17,21 @@ import com.datatorrent.api.annotation.InputPortFieldAnnotation;
  * @category benchmark
  * @tags join
  */
-public class StreamJoin2<T> extends BaseStreamJoin<T> implements Partitioner<StreamJoin2>
+public class StreamJoin2 extends BaseStreamJoin implements Partitioner<StreamJoin2>
 {
   @InputPortFieldAnnotation(optional = true)
-  public transient DefaultInputPort<T> in1 = new DefaultInputPort<T>()
+  public transient DefaultInputPort<byte[]> in1 = new DefaultInputPort<byte[]>()
   {
-    @Override public void process(T tuple)
+    @Override public void process(byte[] tuple)
     {
       processTuple(tuple);
     }
   };
 
   @InputPortFieldAnnotation(optional = true)
-  public transient DefaultInputPort<T> in2 = new DefaultInputPort<T>()
+  public transient DefaultInputPort<byte[]> in2 = new DefaultInputPort<byte[]>()
   {
-    @Override public void process(T tuple)
+    @Override public void process(byte[] tuple)
     {
       processTuple(tuple);
     }
