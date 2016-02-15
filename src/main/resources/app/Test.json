@@ -1,0 +1,210 @@
+{
+  "displayName": "Test",
+  "attributes": {},
+  "operators": [
+    {
+      "name": "Gen",
+      "attributes": {},
+      "class": "com.datatorrent.operators.DataGenerator",
+      "ports": [
+        {
+          "name": "output",
+          "attributes": {}
+        }
+      ],
+      "properties": {
+        "com.datatorrent.operators.DataGenerator": {
+          "ratePerSecond": 1000,
+          "gen": {
+            "com.datatorrent.utils.ByteDataGenerator": {
+              "maxSize": 1024,
+              "minSize": 100
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Split",
+      "attributes": {},
+      "class": "com.datatorrent.operators.SplitStream",
+      "ports": [
+        {
+          "name": "out",
+          "attributes": {}
+        }, {
+          "name": "out1",
+          "attributes": {}
+        }, {
+          "name": "input",
+          "attributes": {
+            "PARTITION_PARALLEL": true
+          }
+        }
+      ],
+      "properties": {
+        "com.datatorrent.operators.SplitStream": {
+          "outputScaleFactor": 1,
+          "gen": {
+            "com.datatorrent.utils.ByteDataGenerator": {
+              "maxSize": "1024",
+              "minSize": "1024"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Sync",
+      "attributes": {},
+      "class": "com.datatorrent.operators.StreamJoin2",
+      "ports": [
+        {
+          "name": "out",
+          "attributes": {}
+        }, {
+          "name": "in1",
+          "attributes": {}
+        }, {
+          "name": "in2",
+          "attributes": {}
+        }
+      ],
+      "properties": {
+        "com.datatorrent.operators.StreamJoin2": {
+          "partitionCount": 1,
+          "split1": true,
+          "split2": true
+        }
+      }
+    },
+    {
+      "name": "Reader",
+      "attributes": {},
+      "class": "com.datatorrent.operators.SplitStream",
+      "ports": [
+        {
+          "name": "out",
+          "attributes": {}
+        }, {
+          "name": "out1",
+          "attributes": {}
+        }, {
+          "name": "input",
+          "attributes": {}
+        }
+      ],
+      "properties": {
+        "com.datatorrent.operators.SplitStream": {
+          "outputScaleFactor": 2,
+          "gen": {
+            "com.datatorrent.utils.ByteDataGenerator": {
+              "maxSize": 1024,
+              "minSize": 1024
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Blocker",
+      "attributes": {},
+      "class": "com.datatorrent.operators.StreamJoin2",
+      "ports": [
+        {
+          "name": "out",
+          "attributes": {}
+        }, {
+          "name": "in1",
+          "attributes": {}
+        }, {
+          "name": "in2",
+          "attributes": {}
+        }
+      ],
+      "properties": {
+        "com.datatorrent.operators.StreamJoin2": {
+          "partitionCount": 8,
+          "split1": true,
+          "split2": false
+        }
+      }
+    }
+  ],
+  "streams": [
+    {
+      "name": "Stream 1",
+      "locality": "THREAD_LOCAL",
+      "sinks": [
+        {
+          "operatorName": "Split",
+          "portName": "input"
+        }
+      ],
+      "source": {
+        "operatorName": "Gen",
+        "portName": "output"
+      }
+    }, {
+      "name": "Stream 2",
+      "sinks": [
+        {
+          "operatorName": "Reader",
+          "portName": "input"
+        }
+      ],
+      "source": {
+        "operatorName": "Split",
+        "portName": "out"
+      }
+    }, {
+      "name": "Stream 3",
+      "sinks": [
+        {
+          "operatorName": "Sync",
+          "portName": "in2"
+        }
+      ],
+      "source": {
+        "operatorName": "Split",
+        "portName": "out1"
+      }
+    }, {
+      "name": "Stream 4",
+      "sinks": [
+        {
+          "operatorName": "Sync",
+          "portName": "in1"
+        }
+      ],
+      "source": {
+        "operatorName": "Reader",
+        "portName": "out"
+      }
+    }, {
+      "name": "Stream 5",
+      "sinks": [
+        {
+          "operatorName": "Blocker",
+          "portName": "in2"
+        }
+      ],
+      "source": {
+        "operatorName": "Sync",
+        "portName": "out"
+      }
+    }, {
+      "name": "Stream 6",
+      "sinks": [
+        {
+          "operatorName": "Blocker",
+          "portName": "in1"
+        }
+      ],
+      "source": {
+        "operatorName": "Reader",
+        "portName": "out1"
+      }
+    }
+  ]
+}

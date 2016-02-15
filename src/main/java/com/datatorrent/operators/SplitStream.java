@@ -17,7 +17,7 @@ import com.datatorrent.api.annotation.OutputPortFieldAnnotation;
 public class SplitStream extends SinglePortInputOutputOperator
 {
   @OutputPortFieldAnnotation(optional = true)
-  public transient DefaultOutputPort<byte[]> out = new DefaultOutputPort<byte[]>();
+  public transient DefaultOutputPort<byte[]> out1 = new DefaultOutputPort<byte[]>();
 
   @Override public void processTuple(byte[] data)
   {
