@@ -11,7 +11,7 @@ import com.datatorrent.utils.ByteDataGenerator;
  * @category benchmark
  * @tags input
  */
-public class DataGenerator extends TimedRateLimitInputOperator<byte[]>
+public class ByteArrayDataGeneratorOperator extends TimedRateLimitInputOperator<byte[]>
 {
   /**
    * The output port on which byte arrays are emitted.
