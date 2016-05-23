@@ -1,0 +1,41 @@
+{
+  "checkpoint": {
+    "size": "1024",
+    "warmup": "60"
+  },
+  "setupDelay": "300",
+  "inputs": [
+    {
+      "name": "in1",
+      "delay": "3",
+      "outputs": [
+        {
+          "name": "out1",
+          "scale": "1",
+          "sizeMin": "100",
+          "sizeMax": "200"
+        }
+      ]
+    },
+    {
+      "name": "in2",
+      "capacity": "1000",
+      "outputs": [
+        {
+          "name" : "out1",
+          "scale": "2",
+          "sizeMin" : "1",
+          "sizeMax" : "2"
+        }
+      ]
+    }
+  ],
+  "endWindow": [
+    {
+      "count": "1000",
+      "name": "out1",
+      "numTuples": "1000",
+      "size": "10-200"
+    }
+  ]
+}

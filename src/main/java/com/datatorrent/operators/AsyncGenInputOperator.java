@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class AsyncGenInputOperator<T> extends BaseOperator implements InputOperator
 {
-  ArrayBlockingQueue<T> queue;
+  private ArrayBlockingQueue<T> queue;
   private int maxQueueSize = 100;
   private int maxTuplesPerWindow = 1000;
   private int maxTuplesPerSecond = 1000;

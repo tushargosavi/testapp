@@ -2,7 +2,6 @@ package com.datatorrent.utils;
 
 import com.datatorrent.api.DefaultOutputPort;
 import com.datatorrent.generator.DataGenerator;
-import com.datatorrent.utils.OutputController;
 import com.datatorrent.utils.OperatorConf.OutputConf;
 
 /**
@@ -15,7 +14,7 @@ import com.datatorrent.utils.OperatorConf.OutputConf;
  * an timer task, to emit at steady rate.
  * @param <T>
  */
-public class DefaultOutputController<T> implements OutputController<T>
+public class DefaultOutputController<T> implements Controller<T>
 {
   private DataGenerator<T> gen;
   private int scale;
@@ -47,6 +46,12 @@ public class DefaultOutputController<T> implements OutputController<T>
         count = 0;
       }
     }
+  }
+
+  @Override
+  public void setup()
+  {
+
   }
 
   public DataGenerator<T> getGen()

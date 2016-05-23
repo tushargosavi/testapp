@@ -15,12 +15,12 @@ import com.datatorrent.api.DefaultInputPort;
 import com.datatorrent.common.util.BaseOperator;
 import com.datatorrent.utils.OperatorConf.InputConf;
 
-public class BaseTestOperator extends BaseOperator
+public class BaseTestOperator<T> extends BaseOperator
 {
-  public transient DefaultInputPort<byte[]> input = new DefaultInputPort<byte[]>()
+  public transient DefaultInputPort<T> input = new DefaultInputPort<T>()
   {
     @Override
-    public void process(byte[] bytes)
+    public void process(T bytes)
     {
       processTuple(this, bytes);
     }
@@ -38,14 +38,14 @@ public class BaseTestOperator extends BaseOperator
     this.configuration = configuration;
   }
 
-  void processTuple(InputPort port, byte[] data) {
-    InputController ic = controllers.get(port);
+  protected void processTuple(InputPort port, T data) {
+    Controller ic = controllers.get(port);
     if (ic != null) {
       ic.processTuple(data);
     }
   }
 
-  Map<InputPort, InputController> controllers = Maps.newHashMap();
+  Map<InputPort, Controller> controllers = Maps.newHashMap();
 
   @Override
   public void setup(Context.OperatorContext context)

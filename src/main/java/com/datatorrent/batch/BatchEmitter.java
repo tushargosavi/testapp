@@ -3,13 +3,10 @@ package com.datatorrent.batch;
 import com.datatorrent.api.DefaultOutputPort;
 import com.datatorrent.lib.util.KeyHashValPair;
 
-import java.util.Collection;
 import java.util.Iterator;
-import java.util.Map;
 
 public abstract class BatchEmitter<K, V> {
 
-    private final Map<K, ? extends Collection<V>> map;
     private final DefaultOutputPort<KeyHashValPair<K, V>> out;
     private final int emitRate;
     private final boolean delete;
@@ -18,13 +15,12 @@ public abstract class BatchEmitter<K, V> {
     private Iterator<V> valIter = null;
     private boolean done = false;
     private K key = null;
+    private int count;
 
     public BatchEmitter(DefaultOutputPort<KeyHashValPair<K, V>> out,
-                        Map<K, ? extends Collection<V>> map,
                         int emitRate,
                         boolean delete)
     {
-        this.map = map;
         this.out = out;
         this.emitRate = emitRate;
         this.delete = delete;
@@ -44,12 +40,12 @@ public abstract class BatchEmitter<K, V> {
             return true;
 
         if (keyIter == null)
-            keyIter = map.keySet().iterator();
+            keyIter = getKeysIterator();
 
         if (valIter == null) {
             if (keyIter.hasNext()) {
                 key = keyIter.next();
-                valIter = map.get(key).iterator();
+                valIter = getBatchIterator(key);
                 return true;
             }else {
                 done = true;
@@ -64,12 +60,11 @@ public abstract class BatchEmitter<K, V> {
         if (!nextBatch())
             return;
 
-        int count = emitRate;
         while (count > 0) {
             if (valIter.hasNext()) {
                 V val = valIter.next();
                 if (delete) valIter.remove();
-                KeyHashValPair<K, V> pair = new KeyHashValPair(key, val);
+                KeyHashValPair<K, V> pair = new KeyHashValPair<>(key, val);
                 out.emit(pair);
                 count--;
             } else {
@@ -80,5 +75,10 @@ public abstract class BatchEmitter<K, V> {
         }
     }
 
-    public abstract Iterator<V> getBatch(K key);
+    void beginWindow() {
+        count = emitRate;
+    }
+
+    public abstract Iterator<V> getBatchIterator(K key);
+    public abstract Iterator<K> getKeysIterator();
 }

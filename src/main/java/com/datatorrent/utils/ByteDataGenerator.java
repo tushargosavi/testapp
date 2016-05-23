@@ -2,7 +2,9 @@ package com.datatorrent.utils;
 
 import java.util.Random;
 
-public class ByteDataGenerator
+import com.datatorrent.generator.DataGenerator;
+
+public class ByteDataGenerator implements DataGenerator<byte[]>
 {
   private int maxSize;
   private int minSize;
@@ -18,6 +20,7 @@ public class ByteDataGenerator
     sizeDiff = max - min;
   }
 
+  @Override
   public byte[] generateData() {
     int size = (sizeDiff <= 0)? minSize : minSize + random.nextInt(sizeDiff);
     byte[] bytes = new byte[size];

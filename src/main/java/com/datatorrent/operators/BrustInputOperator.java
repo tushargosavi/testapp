@@ -11,7 +11,7 @@ package com.datatorrent.operators;
  * @category benchmark
  * @tags input
  */
-public class BrustInputOperator extends DataGenerator
+public class BrustInputOperator extends ByteArrayDataGeneratorOperator
 {
   /* generate burst for n windows, followed by m idle windows */
   private int burstWindows;

@@ -7,7 +7,7 @@ import com.datatorrent.api.annotation.InputPortFieldAnnotation;
 import com.datatorrent.api.annotation.OutputPortFieldAnnotation;
 import com.datatorrent.common.util.BaseOperator;
 import com.datatorrent.utils.ByteDataGenerator;
-import com.datatorrent.utils.OutputController;
+import com.datatorrent.utils.DefaultOutputController;
 
 /**
  * Single port input to output operator.
@@ -33,14 +33,14 @@ public class SinglePortInputOutputOperator extends BaseOperator
   {
     @Override public void process(byte[] tuple)
     {
-      processTuple(tuple);
+      processTuple("1", tuple);
     }
   };
   private int count;
-  private transient OutputController outController = null;
+  private transient DefaultOutputController outController = null;
 
-  public void processTuple(byte[] data) {
-    outController.process();
+  public void processTuple(String id, byte[] data) {
+    outController.processTuple(data);
   }
 
   protected void emitTuple(byte[] data) {
@@ -71,6 +71,6 @@ public class SinglePortInputOutputOperator extends BaseOperator
   public void setup(Context.OperatorContext context)
   {
     super.setup(context);
-    outController = new OutputController(out, gen, outScaleFactor);
+    outController = new DefaultOutputController(out, gen, outScaleFactor);
   }
 }

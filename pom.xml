@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.apache.apex</groupId>
     <artifactId>malhar-demos</artifactId>
-    <version>3.3.0-incubating-SNAPSHOT</version>
+    <version>3.4.0-incubating-SNAPSHOT</version>
   </parent>
 
   <groupId>com.datatorrent</groupId>
@@ -20,18 +20,23 @@
     <checkstyle.skip>true</checkstyle.skip>
   </properties>
 
+  <repositories>
+    <repository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </repository>
+  </repositories>
+
   <dependencies>
     <dependency>
       <groupId>org.apache.apex</groupId>
       <artifactId>malhar-library</artifactId>
-      <version>3.3.0-incubating-SNAPSHOT</version>
-      <scope>provided</scope>
+      <version>3.4.0-incubating-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.apex</groupId>
       <artifactId>malhar-contrib</artifactId>
-      <version>3.3.0-incubating-SNAPSHOT</version>
-      <scope>provided</scope>
+      <version>3.4.0-incubating-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
@@ -50,6 +55,17 @@
       <artifactId>apex-api</artifactId>
       <version>3.4.0-incubating-SNAPSHOT</version>
       <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.github.benas</groupId>
+      <artifactId>random-beans</artifactId>
+      <version>3.0.0-SNAPSHOT</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.github.benas</groupId>
+      <artifactId>random-beans</artifactId>
+      <version>2.0.0</version>
     </dependency>
   </dependencies>
 

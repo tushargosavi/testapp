@@ -1,5 +1,9 @@
 package com.datatorrent.operators;
 
+import java.util.Map;
+
+import com.google.common.collect.Maps;
+
 import com.datatorrent.api.Context;
 import com.datatorrent.api.DefaultOutputPort;
 import com.datatorrent.utils.ByteDataGenerator;
@@ -17,11 +21,12 @@ public class FixCapacityOperator extends SinglePortInputOutputOperator
   private int capacity;
   private transient RateLimitter rt;
   private ByteDataGenerator gen = new ByteDataGenerator(1024, 1024);
+  transient Map<String, Port> ports = Maps.newHashMap();
 
-  @Override public void processTuple(byte[] data)
+  @Override public void processTuple(String id, byte[] data)
   {
-    if (rt.get()) {
-      super.processTuple(data);
+    if (capacity == 0 || rt.get()) {
+      super.processTuple(id, data);
     }
   }
 
@@ -33,21 +38,26 @@ public class FixCapacityOperator extends SinglePortInputOutputOperator
   public void setCapacity(int capacity)
   {
     this.capacity = capacity;
+    // for allowing dynamic change while application is running.
     if (rt != null)
       rt.setCount(capacity);
   }
 
   @Override public void setup(Context.OperatorContext context)
   {
-    rt = new RateLimitter();
-    rt.setCount(capacity);
-    rt.start();
+    if (capacity != 0) {
+      rt = new RateLimitter();
+      rt.setCount(capacity);
+      rt.start();
+    }
     super.setup(context);
   }
 
   @Override public void teardown()
   {
-    rt.stop();
+    if (rt != null) {
+      rt.stop();
+    }
     super.teardown();
   }
 }

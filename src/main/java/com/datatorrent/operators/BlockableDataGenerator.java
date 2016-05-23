@@ -4,7 +4,7 @@ import java.util.Random;
 
 import com.datatorrent.api.Context;
 
-public class BlockableDataGenerator extends DataGenerator
+public class BlockableDataGenerator extends ByteArrayDataGeneratorOperator
 {
 
   private int slowness = 0;

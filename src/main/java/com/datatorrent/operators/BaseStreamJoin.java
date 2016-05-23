@@ -5,14 +5,14 @@ import com.datatorrent.api.DefaultOutputPort;
 import com.datatorrent.api.annotation.OutputPortFieldAnnotation;
 import com.datatorrent.common.util.BaseOperator;
 import com.datatorrent.utils.ByteDataGenerator;
-import com.datatorrent.utils.OutputController;
+import com.datatorrent.utils.DefaultOutputController;
 
 public class BaseStreamJoin extends BaseOperator
 {
   @OutputPortFieldAnnotation(optional = true)
   public DefaultOutputPort<byte[]> out = new DefaultOutputPort<byte[]>();
 
-  private transient OutputController oc;
+  private transient DefaultOutputController oc;
   private ByteDataGenerator gen;
   private int outputScale;
 
@@ -25,7 +25,7 @@ public class BaseStreamJoin extends BaseOperator
   public void setup(Context.OperatorContext context)
   {
     super.setup(context);
-    oc = new OutputController(out, gen, outputScale);
+    oc = new DefaultOutputController(out, gen, outputScale);
   }
 
   public ByteDataGenerator getGen()

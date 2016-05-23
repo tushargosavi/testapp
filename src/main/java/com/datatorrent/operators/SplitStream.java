@@ -3,7 +3,7 @@ package com.datatorrent.operators;
 import com.datatorrent.api.Context;
 import com.datatorrent.api.DefaultOutputPort;
 import com.datatorrent.api.annotation.OutputPortFieldAnnotation;
-import com.datatorrent.utils.OutputController;
+import com.datatorrent.utils.DefaultOutputController;
 
 /**
  * This operator do nothing with input tuple, it just passes the input tuple to
@@ -22,18 +22,18 @@ public class SplitStream extends SinglePortInputOutputOperator
   public transient DefaultOutputPort<byte[]> out1 = new DefaultOutputPort<byte[]>();
 
   private int out1ScaleFactor = 1;
-  private transient OutputController out1Controller = null;
+  private transient DefaultOutputController out1Controller = null;
 
-  @Override public void processTuple(byte[] data)
+  @Override public void processTuple(String id, byte[] data)
   {
-    super.processTuple(data);
-    out1Controller.process();
+    super.processTuple(id, data);
+    out1Controller.processTuple(data);
   }
 
   @Override
   public void setup(Context.OperatorContext context)
   {
     super.setup(context);
-    out1Controller = new OutputController(out1, gen, out1ScaleFactor);
+    out1Controller = new DefaultOutputController(out1, gen, out1ScaleFactor);
   }
 }
