@@ -16,21 +16,18 @@ import com.datatorrent.utils.OperatorConf.OutputConf;
  */
 public class DefaultOutputController<T> implements Controller<T>
 {
-  private DataGenerator<T> gen;
-  private int scale;
   private transient DefaultOutputPort<T> port;
   private int count = 0;
+  private int scale = 1;
+  OutputConf conf;
+  DataGenerator<T> gen;
 
-  public DefaultOutputController(DefaultOutputPort<T> port, DataGenerator<T> gen, int scale)
+  public DefaultOutputController(DefaultOutputPort<T> port, OutputConf conf)
   {
     this.port = port;
-    this.gen = gen;
-    this.scale = scale;
-  }
-
-  public DefaultOutputController(Object o, OutputConf outputConf)
-  {
-
+    scale = conf.scale;
+    this.conf = conf;
+    gen = createGenerator();
   }
 
   @Override
@@ -54,23 +51,8 @@ public class DefaultOutputController<T> implements Controller<T>
 
   }
 
-  public DataGenerator<T> getGen()
-  {
+  DataGenerator<T> createGenerator() {
+    gen = (DataGenerator<T>)new ByteDataGenerator(conf.sizeMin, conf.sizeMax);
     return gen;
-  }
-
-  public int getScale()
-  {
-    return scale;
-  }
-
-  public void setGen(DataGenerator<T> gen)
-  {
-    this.gen = gen;
-  }
-
-  public void setScale(int scale)
-  {
-    this.scale = scale;
   }
 }
