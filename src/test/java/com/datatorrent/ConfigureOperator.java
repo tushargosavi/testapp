@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 
+import com.datatorrent.lib.testbench.CollectorTestSink;
 import com.datatorrent.utils.OperatorConf;
 
 public class ConfigureOperator
@@ -38,10 +39,19 @@ public class ConfigureOperator
   {
     TestOperator op = new TestOperator();
     ByteArrayOutputStream bao = new ByteArrayOutputStream();
-    IOUtils.copy(ConfigureOperator.class.getClassLoader().getResourceAsStream("opdesc.json"), bao);
+    IOUtils.copy(ConfigureOperator.class.getClassLoader().getResourceAsStream("inputop.json"), bao);
     String str = new String(bao.toByteArray());
     op.setConfiguration(str);
     op.setup(null);
-    System.out.println(str);
+
+    CollectorTestSink sink = new CollectorTestSink();
+    op.out1.setSink(sink);
+
+    op.beginWindow(1);
+    op.emitTuples();
+    op.emitTuples();
+    op.endWindow();
+
+    System.out.println("size " + sink.collectedTuples.size());
   }
 }

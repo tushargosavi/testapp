@@ -5,11 +5,12 @@ import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.datatorrent.api.DefaultOutputPort;
+import com.datatorrent.api.Operator;
 import com.datatorrent.generator.DataGenerator;
 
 public class InputOperatorController<T> implements AsyncController
 {
-  private DefaultOutputPort<T> output;
+  private DefaultOutputPort output;
   private static final long ONE_SECOND = 1000;
   protected int batchSize = 100;
   protected DataGenerator<T> gen;
@@ -44,7 +45,7 @@ public class InputOperatorController<T> implements AsyncController
   @Override
   public void setup()
   {
-    availables = new AtomicInteger();
+    availables = new AtomicInteger(ratePerSecond);
     startRateLimitThread();
   }
 
@@ -91,5 +92,16 @@ public class InputOperatorController<T> implements AsyncController
   public void setRatePerSecond(int ratePerSecond)
   {
     this.ratePerSecond = ratePerSecond;
+  }
+
+  public void setOutput(DefaultOutputPort<T> output)
+  {
+    this.output = output;
+  }
+
+  @Override
+  public void setOutputPort(DefaultOutputPort port)
+  {
+    this.output = port;
   }
 }

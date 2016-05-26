@@ -1,5 +1,9 @@
 package com.datatorrent.app;
 
+import java.io.IOException;
+
+import org.apache.commons.compress.utils.IOUtils;
+import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.hadoop.conf.Configuration;
 
 import com.datatorrent.api.DAG;
@@ -14,10 +18,18 @@ public class Application1 implements StreamingApplication
   @Override
   public void populateDAG(DAG dag, Configuration configuration)
   {
-    BaseTestOperator input = dag.addOperator("Input", new BaseTestOperator<>());
-    ConsoleOutputOperator out = dag.addOperator("Out", new ConsoleOutputOperator());
+    try {
+      BaseTestOperator input = dag.addOperator("Input", new BaseTestOperator<>());
+      ByteArrayOutputStream bao = new ByteArrayOutputStream();
+      IOUtils.copy(Application1.class.getClassLoader().getResourceAsStream("inputop.json"), bao);
+      String str = new String(bao.toByteArray());
+      input.setConfiguration(str);
 
-    dag.addStream("s1", input.out1, out.input);
+      ConsoleOutputOperator out = dag.addOperator("Out", new ConsoleOutputOperator());
+      dag.addStream("s1", input.out1, out.input);
 
+    } catch (IOException ex) {
+      ex.printStackTrace();
+    }
   }
 }

@@ -1,5 +1,8 @@
 package com.datatorrent.controllers;
 
+import com.datatorrent.api.DefaultOutputPort;
+import com.datatorrent.api.Operator;
+
 public interface AsyncController
 {
   void setup();
@@ -12,4 +15,7 @@ public interface AsyncController
 
   /** called at endWindow to emit tuples */
   void endWindow();
+
+  /** set output port */
+  void setOutputPort(DefaultOutputPort port);
 }
