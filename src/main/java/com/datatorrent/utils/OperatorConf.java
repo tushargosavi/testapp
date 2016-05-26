@@ -1,6 +1,11 @@
 package com.datatorrent.utils;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import com.datatorrent.controllers.AsyncController;
+import com.datatorrent.controllers.Controller;
 
 public class OperatorConf
 {
@@ -22,18 +27,29 @@ public class OperatorConf
   public static class OutputConf
   {
     public String name;
-    public int scale;
-    public int sizeMin;
-    public int sizeMax;
+    public Controller controller;
 
     @Override
     public String toString()
     {
       return "OutputConf{" +
         "name='" + name + '\'' +
-        ", scale=" + scale +
-        ", sizeMin=" + sizeMin +
-        ", sizeMax=" + sizeMax +
+        ", controller=" + controller +
+        '}';
+    }
+  }
+
+  public static class AsyncOutputConf
+  {
+    public String name;
+    public AsyncController controller;
+
+    @Override
+    public String toString()
+    {
+      return "OutputConf{" +
+        "name='" + name + '\'' +
+        ", controller=" + controller +
         '}';
     }
   }
@@ -43,7 +59,7 @@ public class OperatorConf
     public String name;
     public long delay;
     public long capacity;
-    public List<OutputConf> outputs;
+    public ArrayList<OutputConf> outputs;
 
     @Override
     public String toString()
@@ -58,7 +74,8 @@ public class OperatorConf
 
   public CheckpointConf checkpoint;
   public long setupDelay;
-  public List<InputConf> inputs;
+  public ArrayList<InputConf> inputs;
+  public ArrayList<AsyncOutputConf> outputs;
 
   @Override
   public String toString()

@@ -1,10 +1,10 @@
-package com.datatorrent.utils;
+package com.datatorrent.generator;
 
 import java.util.Random;
 
 import com.datatorrent.generator.DataGenerator;
 
-public class ByteDataGenerator implements DataGenerator<byte[]>
+public class ByteArrayGenerator implements DataGenerator<byte[]>
 {
   private int maxSize;
   private int minSize;
@@ -12,9 +12,9 @@ public class ByteDataGenerator implements DataGenerator<byte[]>
 
   private Random random = new Random();
 
-  public ByteDataGenerator() { }
+  public ByteArrayGenerator() { }
 
-  public ByteDataGenerator(int min, int max) {
+  public ByteArrayGenerator(int min, int max) {
     maxSize = max;
     minSize = min;
     sizeDiff = max - min;

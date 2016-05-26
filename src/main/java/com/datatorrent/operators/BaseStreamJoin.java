@@ -4,16 +4,14 @@ import com.datatorrent.api.Context;
 import com.datatorrent.api.DefaultOutputPort;
 import com.datatorrent.api.annotation.OutputPortFieldAnnotation;
 import com.datatorrent.common.util.BaseOperator;
-import com.datatorrent.utils.ByteDataGenerator;
-import com.datatorrent.utils.DefaultOutputController;
+import com.datatorrent.generator.ByteArrayGenerator;
 
 public class BaseStreamJoin extends BaseOperator
 {
   @OutputPortFieldAnnotation(optional = true)
   public DefaultOutputPort<byte[]> out = new DefaultOutputPort<byte[]>();
 
-  private transient DefaultOutputController oc;
-  private ByteDataGenerator gen;
+  private ByteArrayGenerator gen;
   private int outputScale;
 
   protected void processTuple(byte[] tuple) {
@@ -25,15 +23,14 @@ public class BaseStreamJoin extends BaseOperator
   public void setup(Context.OperatorContext context)
   {
     super.setup(context);
-    oc = new DefaultOutputController(out, gen, outputScale);
   }
 
-  public ByteDataGenerator getGen()
+  public ByteArrayGenerator getGen()
   {
     return gen;
   }
 
-  public void setGen(ByteDataGenerator gen)
+  public void setGen(ByteArrayGenerator gen)
   {
     this.gen = gen;
   }

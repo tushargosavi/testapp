@@ -1,9 +1,10 @@
-package com.datatorrent.utils;
+package com.datatorrent.operators;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Map;
 
+import org.codehaus.jackson.annotate.JsonTypeInfo;
 import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectReader;
@@ -12,10 +13,17 @@ import com.google.common.collect.Maps;
 
 import com.datatorrent.api.Context;
 import com.datatorrent.api.DefaultInputPort;
+import com.datatorrent.api.DefaultOutputPort;
+import com.datatorrent.api.InputOperator;
 import com.datatorrent.common.util.BaseOperator;
+import com.datatorrent.controllers.AsyncController;
+import com.datatorrent.controllers.Controller;
+import com.datatorrent.controllers.DefaultInputController;
+import com.datatorrent.utils.OperatorConf;
 import com.datatorrent.utils.OperatorConf.InputConf;
+import com.datatorrent.utils.OperatorConf.AsyncOutputConf;
 
-public class BaseTestOperator<T> extends BaseOperator
+public class BaseTestOperator<T> extends BaseOperator implements InputOperator
 {
   public transient DefaultInputPort<T> input = new DefaultInputPort<T>()
   {
@@ -25,6 +33,8 @@ public class BaseTestOperator<T> extends BaseOperator
       processTuple(this, bytes);
     }
   };
+
+  public transient DefaultOutputPort<T> out1 = new DefaultOutputPort<T>();
 
   private String configuration;
 
@@ -46,6 +56,7 @@ public class BaseTestOperator<T> extends BaseOperator
   }
 
   Map<InputPort, Controller> controllers = Maps.newHashMap();
+  Map<OutputPort, AsyncController> asyncControllers = Maps.newHashMap();
 
   @Override
   public void setup(Context.OperatorContext context)
@@ -58,6 +69,12 @@ public class BaseTestOperator<T> extends BaseOperator
         Field field = clazz.getField(iconf.name);
         InputPort port = (InputPort)field.get(this);
         controllers.put(port, new DefaultInputController(port, this, iconf));
+      }
+
+      for (AsyncOutputConf oconf : conf.outputs) {
+        Field field = clazz.getField(oconf.name);
+        OutputPort port = (OutputPort)field.get(this);
+        asyncControllers.put(port, oconf.controller);
       }
     } catch (IOException e) {
       throw new RuntimeException("Can not configuration operator ", e);
@@ -72,9 +89,26 @@ public class BaseTestOperator<T> extends BaseOperator
   {
     ObjectMapper mapper = new ObjectMapper();
     mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    mapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
+    mapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_CONCRETE_AND_ARRAYS, JsonTypeInfo.As.PROPERTY);
     ObjectReader reader = mapper.reader(OperatorConf.class);
-
     OperatorConf conf = reader.readValue(configuration);
     return conf;
+  }
+
+  @Override
+  public void emitTuples()
+  {
+    for (AsyncController ac : asyncControllers.values()) {
+      ac.emitTuples();
+    }
+  }
+
+  @Override
+  public void endWindow()
+  {
+    for (AsyncController ac : asyncControllers.values()) {
+      ac.endWindow();
+    }
   }
 }

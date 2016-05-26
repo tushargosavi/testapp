@@ -1,8 +1,7 @@
-package com.datatorrent.utils;
+package com.datatorrent.controllers;
 
 import com.datatorrent.api.DefaultOutputPort;
 import com.datatorrent.generator.DataGenerator;
-import com.datatorrent.utils.OperatorConf.OutputConf;
 
 /**
  * controls the amount of data send on the output port of an
@@ -19,16 +18,9 @@ public class DefaultOutputController<T> implements Controller<T>
   private transient DefaultOutputPort<T> port;
   private int count = 0;
   private int scale = 1;
-  OutputConf conf;
   DataGenerator<T> gen;
 
-  public DefaultOutputController(DefaultOutputPort<T> port, OutputConf conf)
-  {
-    this.port = port;
-    scale = conf.scale;
-    this.conf = conf;
-    gen = createGenerator();
-  }
+  public DefaultOutputController() { }
 
   @Override
   public void processTuple(T tuple) {
@@ -51,8 +43,33 @@ public class DefaultOutputController<T> implements Controller<T>
 
   }
 
-  DataGenerator<T> createGenerator() {
-    gen = (DataGenerator<T>)new ByteDataGenerator(conf.sizeMin, conf.sizeMax);
+  public DataGenerator<T> getGen()
+  {
     return gen;
+  }
+
+  public void setGen(DataGenerator<T> gen)
+  {
+    this.gen = gen;
+  }
+
+  public int getCount()
+  {
+    return count;
+  }
+
+  public void setCount(int count)
+  {
+    this.count = count;
+  }
+
+  public int getScale()
+  {
+    return scale;
+  }
+
+  public void setScale(int scale)
+  {
+    this.scale = scale;
   }
 }

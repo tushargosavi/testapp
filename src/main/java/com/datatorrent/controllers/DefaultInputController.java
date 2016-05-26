@@ -1,4 +1,4 @@
-package com.datatorrent.utils;
+package com.datatorrent.controllers;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -10,10 +10,11 @@ import com.google.common.collect.Maps;
 import com.datatorrent.api.Operator;
 import com.datatorrent.utils.OperatorConf.InputConf;
 import com.datatorrent.utils.OperatorConf.OutputConf;
+import com.datatorrent.utils.RateLimitter;
 
 public class DefaultInputController<T> implements Controller<T>
 {
-  private List<DefaultOutputController<T>> outputs = new ArrayList<>();
+  private List<Controller<T>> outputs = new ArrayList<>();
   private transient InputConf conf;
   private transient RateLimitter rt;
 
@@ -36,8 +37,7 @@ public class DefaultInputController<T> implements Controller<T>
       for (OutputConf oconf : conf.outputs) {
         if (outPortFields.containsKey(oconf.name)) {
           Field f = outPortFields.get(oconf.name);
-          DefaultOutputController<T> oc = new DefaultOutputController<T>(f.get(o), oconf);
-          outputs.add(oc);
+          outputs.add(oconf.controller);
         } else {
           throw new IllegalArgumentException("Output port not defined " + oconf.name);
         }
@@ -60,7 +60,7 @@ public class DefaultInputController<T> implements Controller<T>
       }
     }
 
-    for (DefaultOutputController<T> oc : outputs) {
+    for (Controller<T> oc : outputs) {
       oc.processTuple(tuple);
     }
   }

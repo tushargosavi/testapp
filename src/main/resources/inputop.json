@@ -1,0 +1,19 @@
+{
+  "@class": "com.datatorrent.utils.OperatorConf",
+  "setupDelay": "300",
+  "outputs": [
+    {
+      "@class": "com.datatorrent.utils.AsyncOutputConf",
+      "name": "out1",
+      "controller": {
+        "@class": "com.datatorrent.controllers.InputOperatorController",
+        "ratePerSecond": 100,
+        "gen": {
+          "@class": "com.datatorrent.generator.ByteArrayGenerator",
+          "minSize": "10",
+          "maxSize": "20"
+        }
+      }
+    }
+  ]
+}

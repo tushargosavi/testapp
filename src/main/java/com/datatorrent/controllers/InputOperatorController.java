@@ -1,37 +1,49 @@
-package com.datatorrent.operators;
-
-import com.datatorrent.api.Context;
-import com.datatorrent.api.InputOperator;
-import com.datatorrent.common.util.BaseOperator;
+package com.datatorrent.controllers;
 
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public abstract class TimedRateLimitInputOperator<T> extends BaseOperator implements InputOperator
-{
-  private static final long ONE_SECOND = 1000;
-  private transient Context.OperatorContext context;
-  protected int batchSize = 100;
+import com.datatorrent.api.DefaultOutputPort;
+import com.datatorrent.generator.DataGenerator;
 
-  @Override public void emitTuples()
+public class InputOperatorController<T> implements AsyncController
+{
+  private DefaultOutputPort<T> output;
+  private static final long ONE_SECOND = 1000;
+  protected int batchSize = 100;
+  protected DataGenerator<T> gen;
+
+  @Override
+  public void idleTimeout()
   {
 
+  }
+
+  @Override
+  public void emitTuples()
+  {
     int count = Math.min(availables.get(), batchSize);
 
     if (count <= 0)
       return;
 
     for(int i = 0; i < count; i++) {
-      T item = generateTuple();
-      emitTuple(item);
+      T item = gen.generateData();
+      output.emit(item);
     }
     availables.addAndGet(-count);
   }
 
   @Override
-  public void setup(Context.OperatorContext context) {
-    this.context = context;
+  public void endWindow()
+  {
+
+  }
+
+  @Override
+  public void setup()
+  {
     availables = new AtomicInteger();
     startRateLimitThread();
   }
@@ -51,8 +63,25 @@ public abstract class TimedRateLimitInputOperator<T> extends BaseOperator implem
     }, ONE_SECOND, ONE_SECOND);
   }
 
-  protected abstract T generateTuple();
-  protected abstract void emitTuple(T tuple);
+  public int getBatchSize()
+  {
+    return batchSize;
+  }
+
+  public void setBatchSize(int batchSize)
+  {
+    this.batchSize = batchSize;
+  }
+
+  public DataGenerator<T> getGen()
+  {
+    return gen;
+  }
+
+  public void setGen(DataGenerator<T> gen)
+  {
+    this.gen = gen;
+  }
 
   public int getRatePerSecond()
   {

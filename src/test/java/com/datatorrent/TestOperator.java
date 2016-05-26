@@ -2,7 +2,7 @@ package com.datatorrent;
 
 import com.datatorrent.api.DefaultInputPort;
 import com.datatorrent.api.DefaultOutputPort;
-import com.datatorrent.utils.BaseTestOperator;
+import com.datatorrent.operators.BaseTestOperator;
 
 public class TestOperator<T> extends BaseTestOperator<T>
 {

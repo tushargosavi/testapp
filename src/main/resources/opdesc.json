@@ -1,41 +1,52 @@
 {
-  "checkpoint": {
-    "size": "1024",
-    "warmup": "60"
-  },
+  "@class": "com.datatorrent.utils.OperatorConf",
   "setupDelay": "300",
   "inputs": [
     {
+      "@class": "com.datatorrent.utils.InputConf",
       "name": "in1",
       "delay": "3",
       "outputs": [
         {
           "name": "out1",
-          "scale": "1",
-          "sizeMin": "100",
-          "sizeMax": "200"
-        }
-      ]
-    },
-    {
-      "name": "in2",
-      "capacity": "1000",
-      "outputs": [
+          "controller": {
+            "@class": "com.datatorrent.controllers.DefaultOutputController",
+            "scale": "1",
+            "gen": {
+              "@class": "com.datatorrent.generator.ByteArrayGenerator",
+              "minSize": "100",
+              "maxSize": "200"
+            }
+          }
+        },
         {
-          "name" : "out1",
-          "scale": "2",
-          "sizeMin" : "1",
-          "sizeMax" : "2"
+          "name": "out2",
+          "controller": {
+            "@class": "com.datatorrent.controllers.DefaultOutputController",
+            "scale": "2",
+            "gen": {
+              "@class": "com.datatorrent.generator.ByteArrayGenerator",
+              "minSize": "10",
+              "maxSize": "20"
+            }
+          }
         }
       ]
     }
   ],
-  "endWindow": [
+  "outputs": [
     {
-      "count": "1000",
+      "@class": "com.datatorrent.utils.AsyncOutputConf",
       "name": "out1",
-      "numTuples": "1000",
-      "size": "10-200"
+      "controller" : {
+        "@class" : "com.datatorrent.controllers.InputOperatorController",
+        "ratePerSecond": 100,
+        "gen": {
+          "@class": "com.datatorrent.generator.ByteArrayGenerator",
+          "minSize": "10",
+          "maxSize": "20"
+        }
+      }
     }
   ]
 }
