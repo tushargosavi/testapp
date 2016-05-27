@@ -30,7 +30,7 @@ public class ConfigureOperator
     mapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_CONCRETE_AND_ARRAYS, JsonTypeInfo.As.PROPERTY);
 
     ObjectReader reader = mapper.reader(OperatorConf.class);
-    OperatorConf conf = reader.readValue(ConfigureOperator.class.getClassLoader().getResourceAsStream("opdesc.json"));
+    OperatorConf conf = reader.readValue(ConfigureOperator.class.getClassLoader().getResourceAsStream("op3.json"));
     System.out.println(conf);
   }
 

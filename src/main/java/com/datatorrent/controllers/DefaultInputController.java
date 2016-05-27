@@ -1,61 +1,27 @@
 package com.datatorrent.controllers;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import com.google.common.collect.Maps;
 
 import com.datatorrent.api.Operator;
-import com.datatorrent.utils.OperatorConf.InputConf;
-import com.datatorrent.utils.OperatorConf.OutputConf;
 import com.datatorrent.utils.RateLimitter;
 
 public class DefaultInputController<T> implements Controller<T>
 {
-  private List<Controller<T>> outputs = new ArrayList<>();
-  private transient InputConf conf;
+  private ArrayList<Controller<T>> outputs = new ArrayList<>();
   private transient RateLimitter rt;
-
-  public DefaultInputController(Operator.InputPort port, Operator o, InputConf conf) {
-    this.conf = conf;
-
-    Map<String, Field> outPortFields = Maps.newHashMap();
-
-    try {
-      Class clazz = o.getClass();
-      for (Field f : clazz.getFields()) {
-        if (Operator.OutputPort.class.isAssignableFrom(f.getType())) {
-          System.out.println("The name of the object is " + f.getName());
-          outPortFields.put(f.getName(), f);
-        }
-      }
-
-
-    // populate output controllers.
-      for (OutputConf oconf : conf.outputs) {
-        if (outPortFields.containsKey(oconf.name)) {
-          Field f = outPortFields.get(oconf.name);
-          outputs.add(oconf.controller);
-        } else {
-          throw new IllegalArgumentException("Output port not defined " + oconf.name);
-        }
-      }
-    } catch (Throwable ex) {
-      throw new RuntimeException(ex);
-    }
-  }
+  private String name;
+  public long delay;
+  public long capacity;
 
   @Override
   public void processTuple(T tuple)
   {
-    if (conf.capacity != 0 && rt != null)
+    if (capacity != 0 && rt != null)
       rt.get();
 
-    if (conf.delay != 0) {
+    if (delay != 0) {
       try {
-        Thread.sleep(conf.delay);
+        Thread.sleep(delay);
       } catch (InterruptedException e) {
       }
     }
@@ -66,12 +32,32 @@ public class DefaultInputController<T> implements Controller<T>
   }
 
   @Override
-  public void setup()
+  public void setup(Operator o, Operator.Port port)
   {
-    if (conf.capacity != 0) {
+    for (Controller oc : outputs) {
+      oc.setup(o, oc.getPort(o));
+    }
+
+    if (capacity != 0) {
       rt = new RateLimitter();
-      rt.setCount(conf.capacity);
+      rt.setCount(capacity);
       rt.start();
     }
+  }
+
+  public String getName()
+  {
+    return name;
+  }
+
+  public void setName(String name)
+  {
+    this.name = name;
+  }
+
+  @Override
+  public Operator.Port getPort(Operator o)
+  {
+    return null;
   }
 }

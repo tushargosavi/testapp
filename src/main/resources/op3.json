@@ -1,0 +1,37 @@
+{
+  "@class": "com.datatorrent.utils.OperatorConf",
+  "setupDelay": "300",
+  "inputs": [
+    {
+      "@class": "com.datatorrent.controllers.DefaultInputController",
+      "name": "in1",
+      "delay": "3",
+      "outputs": [
+        {
+          "name": "out1",
+          "controller": {
+            "@class": "com.datatorrent.controllers.DefaultOutputController",
+            "scale": "1",
+            "gen": {
+              "@class": "com.datatorrent.generator.ByteArrayGenerator",
+              "minSize": "100",
+              "maxSize": "200"
+            }
+          }
+        },
+        {
+          "name": "out2",
+          "controller": {
+            "@class": "com.datatorrent.controllers.DefaultOutputController",
+            "scale": "2",
+            "gen": {
+              "@class": "com.datatorrent.generator.ByteArrayGenerator",
+              "minSize": "10",
+              "maxSize": "20"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

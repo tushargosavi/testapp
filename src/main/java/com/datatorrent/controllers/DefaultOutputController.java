@@ -1,6 +1,9 @@
 package com.datatorrent.controllers;
 
+import java.lang.reflect.Field;
+
 import com.datatorrent.api.DefaultOutputPort;
+import com.datatorrent.api.Operator;
 import com.datatorrent.generator.DataGenerator;
 
 /**
@@ -16,6 +19,7 @@ import com.datatorrent.generator.DataGenerator;
 public class DefaultOutputController<T> implements Controller<T>
 {
   private transient DefaultOutputPort<T> port;
+  String name;
   private int count = 0;
   private int scale = 1;
   DataGenerator<T> gen;
@@ -35,12 +39,6 @@ public class DefaultOutputController<T> implements Controller<T>
         count = 0;
       }
     }
-  }
-
-  @Override
-  public void setup()
-  {
-
   }
 
   public DataGenerator<T> getGen()
@@ -71,5 +69,32 @@ public class DefaultOutputController<T> implements Controller<T>
   public void setScale(int scale)
   {
     this.scale = scale;
+  }
+
+  @Override
+  public void setup(Operator op, Operator.Port port)
+  {
+    this.port = (DefaultOutputPort)port;
+  }
+
+  @Override
+  public Operator.Port getPort(Operator o)
+  {
+    try {
+      Field f = o.getClass().getField(name);
+      return (Operator.Port)f.get(o);
+    } catch (Throwable th) {
+      return null;
+    }
+  }
+
+  public String getName()
+  {
+    return name;
+  }
+
+  public void setName(String name)
+  {
+    this.name = name;
   }
 }

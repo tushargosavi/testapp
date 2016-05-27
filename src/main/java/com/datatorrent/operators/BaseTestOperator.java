@@ -12,34 +12,16 @@ import org.codehaus.jackson.map.ObjectReader;
 import com.google.common.collect.Maps;
 
 import com.datatorrent.api.Context;
-import com.datatorrent.api.DefaultInputPort;
 import com.datatorrent.api.DefaultOutputPort;
 import com.datatorrent.api.InputOperator;
-import com.datatorrent.api.annotation.InputPortFieldAnnotation;
-import com.datatorrent.api.annotation.OutputPortFieldAnnotation;
 import com.datatorrent.common.util.BaseOperator;
 import com.datatorrent.controllers.AsyncController;
 import com.datatorrent.controllers.Controller;
 import com.datatorrent.controllers.DefaultInputController;
 import com.datatorrent.utils.OperatorConf;
-import com.datatorrent.utils.OperatorConf.InputConf;
-import com.datatorrent.utils.OperatorConf.AsyncOutputConf;
 
 public class BaseTestOperator<T> extends BaseOperator implements InputOperator
 {
-  @InputPortFieldAnnotation(optional = true)
-  public transient DefaultInputPort<T> input = new DefaultInputPort<T>()
-  {
-    @Override
-    public void process(T bytes)
-    {
-      processTuple(this, bytes);
-    }
-  };
-
-  @OutputPortFieldAnnotation(optional = true)
-  public transient DefaultOutputPort<T> out1 = new DefaultOutputPort<T>();
-
   private String configuration;
 
   public String getConfiguration()
@@ -73,7 +55,8 @@ public class BaseTestOperator<T> extends BaseOperator implements InputOperator
         for (InputConf iconf : conf.inputs) {
           Field field = clazz.getField(iconf.name);
           InputPort port = (InputPort)field.get(this);
-          controllers.put(port, new DefaultInputController(port, this, iconf));
+          //DefaultInputController ctrl = new DefaultInputController(port, this, iconf);
+          controllers.put(port, new DefaultInputController(this, iconf));
         }
 
         for (Controller c : controllers.values()) {

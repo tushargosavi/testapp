@@ -10,7 +10,7 @@ import com.datatorrent.api.DAG;
 import com.datatorrent.api.StreamingApplication;
 import com.datatorrent.api.annotation.ApplicationAnnotation;
 import com.datatorrent.lib.io.ConsoleOutputOperator;
-import com.datatorrent.operators.BaseTestOperator;
+import com.datatorrent.operators.SimOperator;
 
 @ApplicationAnnotation(name = "Application1")
 public class Application1 implements StreamingApplication
@@ -19,7 +19,7 @@ public class Application1 implements StreamingApplication
   public void populateDAG(DAG dag, Configuration configuration)
   {
     try {
-      BaseTestOperator input = dag.addOperator("Input", new BaseTestOperator<>());
+      SimOperator input = dag.addOperator("Input", new SimOperator());
       ByteArrayOutputStream bao = new ByteArrayOutputStream();
       IOUtils.copy(Application1.class.getClassLoader().getResourceAsStream("inputop.json"), bao);
       String str = new String(bao.toByteArray());

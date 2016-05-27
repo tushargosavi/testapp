@@ -5,7 +5,6 @@ import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.datatorrent.api.DefaultOutputPort;
-import com.datatorrent.api.Operator;
 import com.datatorrent.generator.DataGenerator;
 
 public class InputOperatorController<T> implements AsyncController
@@ -18,7 +17,7 @@ public class InputOperatorController<T> implements AsyncController
   @Override
   public void idleTimeout()
   {
-
+    emitTuples();
   }
 
   @Override
